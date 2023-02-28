@@ -1,7 +1,11 @@
 const UserSchema = require("../schemas/UsersSchema");
 const bcrypt = require("bcrypt");
-
+const error = new Error();
 const userService = {
+  getUser: async (id) => {
+    const user = await UserSchema.findById(id);
+    return user.toObject();
+  },
   addUser: async (data) => {
     // hash the password to add in the db
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -45,11 +49,23 @@ const userService = {
       payLoad.password = hashedPassword;
     }
 
-    return await UserSchema.findByIdAndUpdate(data.id, payLoad, { new: true });
+    const user = await UserSchema.findByIdAndUpdate(data.id, payLoad, {
+      new: true,
+    });
+    if (!user) {
+      error.message = "USER NOT FOUND";
+      error.status = "NOT_FOUND";
+      throw error;
+    } else return user.toObject();
   },
 
   deleteUser: async (data) => {
-    return await UserSchema.findByIdAndDelete(data.id);
+    const user = await UserSchema.findByIdAndDelete(data.id);
+    if (!user) {
+      error.message = "USER NOT FOUND";
+      error.status = "NOT_FOUND";
+      throw error;
+    } else return user;
   },
 };
 
