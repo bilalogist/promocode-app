@@ -21,7 +21,6 @@ const promoService = {
       { new: true }
     ); // update the user record by pushing the new promo code to its promoCodes array
 
-    console.log(updatedUser);
     return { promotionalCode: code };
   },
   promoCodeExists: async (code) => {
