@@ -1,4 +1,4 @@
-import statusCodes from "./statusCodes";
+import statusCodes from "./statusCodes.js";
 
 const apiResponse = (
   res,

@@ -1,35 +1,39 @@
-// const apiResponse = require("../helpers/apiResponse");
-const userService = require("../services/userService");
+import apiResponse from "../helpers/apiResponse.js";
+import userService from "../services/userService.js";
 const userController = {
+  // gets the user info by the id in the request query
+  getUser: async (req, res) => {
+    try {
+      const { _id, __v, password, ...user } = await userService.getUser(
+        req.query.id
+      );
+
+      apiResponse(res, false, "", { id: _id, ...user });
+    } catch (err) {
+      apiResponse(res, true, err.message, null, "INTERNAL_SERVER_ERROR");
+    }
+  },
+  // add the user in mongodb by the json in the request body
   addUser: async (req, res) => {
     try {
-      const { password, __v, ...user } = await userService.addUser(req.body);
-
-      apiResponse(res, false, "User created", user);
-    } catch (err) {
-      apiResponse(res, true, err.message, null, "INTERNAL_SERVER_ERROR");
-    }
-  },
-  generatePromoCode: async (req, res) => {
-    try {
-      let code = await userController.generateUniquePromoCode();
-      const promoCode = await userService.savePromoCode(req.params.id, code);
-      apiResponse(
-        res,
-        false,
-        "Promotional code generated successfully",
-        promoCode
+      const { _id, __v, password, ...user } = await userService.addUser(
+        req.body
       );
+
+      apiResponse(res, false, "User created", { id: _id, ...user });
     } catch (err) {
       apiResponse(res, true, err.message, null, "INTERNAL_SERVER_ERROR");
     }
   },
+  // updates the user info by the json in the request body against the id in body
 
   updateUser: async (req, res) => {
     try {
-      const data = req.body;
-      const user = await userService.updateUser(data);
-      apiResponse(res, false, "User updated", user);
+      const { _id, __v, password, ...user } = await userService.updateUser(
+        req.body
+      );
+
+      apiResponse(res, false, "User updated", { id: _id, ...user });
     } catch (err) {
       apiResponse(
         res,
@@ -40,20 +44,11 @@ const userController = {
       );
     }
   },
+  // deletes the user from mongodb by the id in the request body
+
   deleteUser: async (req, res) => {
     try {
-      if (!req.body.id)
-        return apiResponse(
-          res,
-          true,
-          "Please provide user id",
-          null,
-          "FORBIDDEN"
-        );
-
-      const data = req.body;
-
-      const user = await userService.deleteUser(data);
+      const user = await userService.deleteUser(req.body);
       apiResponse(res, false, "User Deleted", null);
     } catch (err) {
       apiResponse(
@@ -65,25 +60,6 @@ const userController = {
       );
     }
   },
-  // helper functions //
-
-  generateRandomCode: () => {
-    const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let code = "";
-    for (let i = 0; i < 5; i++) {
-      const index = Math.floor(Math.random() * characters.length);
-      code += characters[index];
-    }
-    return code;
-  },
-  generateUniquePromoCode: async () => {
-    let promoCode = userController.generateRandomCode();
-    while (await userService.promoCodeExists(promoCode)) {
-      // keep generating promo codes until we find one that is not present in the database
-      promoCode = generateRandomCode();
-    }
-    return promoCode; // return the unique promo code
-  },
 };
 
-module.exports = userController;
+export default userController;
