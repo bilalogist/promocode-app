@@ -1,12 +1,14 @@
-const createError = require("http-errors");
-const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const mongoose = require("mongoose");
-require("dotenv").config();
-const apiResponse = require("./app/helpers/apiResponse");
-const usersRouter = require("./routes/users");
+import createError from "http-errors";
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import mongoose from "mongoose";
+import apiResponse from "./app/helpers/apiResponse.js";
+import usersRouter from "./routes/users";
+import dotenv from "dotenv";
+
+dotenv.config();
 global["apiResponse"] = apiResponse;
 const app = express();
 
@@ -42,4 +44,4 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-module.exports = app;
+export default app;

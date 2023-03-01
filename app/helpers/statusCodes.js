@@ -1,5 +1,5 @@
-const appConfig = require("./appConfig");
+import appConfig from "./appConfig";
 
-module.exports = (p) => {
-    return appConfig.STATUS_CODES[p];
+export default (p) => {
+  return appConfig.STATUS_CODES[p];
 };
