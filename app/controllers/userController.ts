@@ -1,8 +1,9 @@
 import apiResponse from "../helpers/apiResponse.js";
 import userService from "../services/userService.js";
+import { Request, Response } from "express";
 const userController = {
   // gets the user info by the id in the request query
-  getUser: async (req, res) => {
+  getUser: async (req: Request, res: Response) => {
     try {
       const { _id, __v, password, ...user } = await userService.getUser(
         req.query.id
@@ -14,7 +15,7 @@ const userController = {
     }
   },
   // add the user in mongodb by the json in the request body
-  addUser: async (req, res) => {
+  addUser: async (req: Request, res: Response) => {
     try {
       const { _id, __v, password, ...user } = await userService.addUser(
         req.body
@@ -27,7 +28,7 @@ const userController = {
   },
   // updates the user info by the json in the request body against the id in body
 
-  updateUser: async (req, res) => {
+  updateUser: async (req: Request, res: Response) => {
     try {
       const { _id, __v, password, ...user } = await userService.updateUser(
         req.body
@@ -46,7 +47,7 @@ const userController = {
   },
   // deletes the user from mongodb by the id in the request body
 
-  deleteUser: async (req, res) => {
+  deleteUser: async (req: Request, res: Response) => {
     try {
       const user = await userService.deleteUser(req.body);
       apiResponse(res, false, "User Deleted", null);

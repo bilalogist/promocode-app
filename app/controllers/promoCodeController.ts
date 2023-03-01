@@ -1,9 +1,11 @@
 import apiResponse from "../helpers/apiResponse.js";
 import promoService from "../services/promoService.js";
 import userService from "../services/userService.js";
+import { Request, Response } from "express";
+
 const promoController = {
   // fetches the user with which the promo code is connected with
-  getPromoCodeInfo: async (req, res) => {
+  getPromoCodeInfo: async (req: Request, res: Response) => {
     try {
       let { _id, ...user } = await promoService.getPromoInfo(
         req.params.promoCode
@@ -22,7 +24,7 @@ const promoController = {
   },
   // generates a 5 character promo code and pushed to the specified user promoCodes array
   // in the mongodb
-  generatePromoCode: async (req, res) => {
+  generatePromoCode: async (req: Request, res: Response) => {
     try {
       let code = await promoController.generateUniquePromoCode();
       const promoCode = await userService.savePromoCode(req.query.id, code);
