@@ -9,13 +9,13 @@ router.post("/", userRules.addUser(), validator, userController.addUser);
 
 router.get("/", userRules.checkUserId(), validator, userController.getUser);
 
-router.put("/", userController.updateUser);
+router.put("/", userRules.updateUser(), validator, userController.updateUser);
 
 router.delete(
-  "/",
-  userRules.deleteUser(),
-  validator,
-  userController.deleteUser
+    "/",
+    userRules.deleteUser(),
+    validator,
+    userController.deleteUser
 );
 
 export default router;
